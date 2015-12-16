@@ -1,0 +1,19 @@
+{
+  "name": "poeditor-utils",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Ján Dzurek <famousgarkin@outlook.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "bluebird": "^3.0.6",
+    "poeditor-client": "janjakubnanista/poeditor-client#db90d05a2a21c70f38b94711997114946fd9d3bc"
+  }
+}
