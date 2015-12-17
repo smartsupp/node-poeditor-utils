@@ -1,7 +1,5 @@
 'use strict';
 
-var expect = require('expect.js');
-
 var Project = require('../lib/Project');
 
 describe('Project', function () {
@@ -11,14 +9,10 @@ describe('Project', function () {
 		});
 	});
 
-	afterEach(function () {
-		delete this.project;
-	});
-
 	it('creates a proxy object for working with a project', function () {
-		expect(this.project.apiToken).to.be('sometoken');
-		expect(this.project.name).to.be('somename');
-		expect(this.project.id).to.be(2);
-		expect(this.project.data).to.have.property('something');
+		expect(this.project.apiToken).toBe('sometoken');
+		expect(this.project.name).toBe('somename');
+		expect(this.project.id).toBe(2);
+		expect(this.project.data.something).toBe(3);
 	});
 });
