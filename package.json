@@ -19,6 +19,6 @@
   "dependencies": {
     "bluebird": "^3.0.6",
     "immutable": "^3.7.6",
-    "poeditor-client": "janjakubnanista/poeditor-client#db90d05a2a21c70f38b94711997114946fd9d3bc"
+    "poeditor-client": "janjakubnanista/poeditor-client#3bb4d3103d8e6ed3e56a0b874afee7ea5ba58685"
   }
 }
