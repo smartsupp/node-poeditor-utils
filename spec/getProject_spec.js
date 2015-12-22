@@ -1,7 +1,6 @@
 'use strict';
 
 var Promise = require('bluebird');
-
 var Projects = require('poeditor-client/src/Projects');
 
 var getProject = require('../lib/getProject');
@@ -22,12 +21,11 @@ describe('getProject', function () {
 	it('gets project data via POEditor API', function (done) {
 		getProject('sometoken', 'somename')
 		.then(function (project) {
-			done();
 			expect(typeof project).toBe('object');
 			expect(project).not.toBeNull();
-			expect(project.apiToken).toBe('sometoken');
 			expect(project.id).toBe(2);
-			expect(project.data.name).toBe('somename');
+			expect(project.name).toBe('somename');
+			done();
 		});
 	});
 });
