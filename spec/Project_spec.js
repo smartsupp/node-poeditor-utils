@@ -3,14 +3,21 @@
 var Project = require('../lib/Project');
 
 describe('Project', function () {
-	it('extends poeditor-client project', function () {
-		var project = new Project('sometoken', {
+	beforeEach(function () {
+		this.project = new Project('sometoken', {
 			name: 'somename',
 			id: 2
 		});
-		expect(project.name).toBe('somename');
-		expect(project.id).toBe(2);
-		expect(project.languages).toBeTruthy();
-		expect(project.terms).toBeTruthy();
+	});
+
+	it('extends poeditor-client project', function () {
+		expect(this.project.name).toBe('somename');
+		expect(this.project.id).toBe(2);
+		expect(this.project.languages).toBeTruthy();
+		expect(this.project.terms).toBeTruthy();
+	});
+
+	it('provides project utilities', function () {
+		expect(typeof this.project.utils).toBeTruthy();
 	});
 });
