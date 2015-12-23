@@ -1,13 +1,13 @@
 'use strict';
 
-var Promise = require('bluebird');
 var Projects = require('poeditor-client/src/Projects');
+var Promise = require('native-promise-only');
 
 var getProject = require('../lib/getProject');
 
 describe('getProject', function () {
 	beforeEach(function () {
-		spyOn(Projects.prototype, 'list').and.returnValue(new Promise.resolve([
+		spyOn(Projects.prototype, 'list').and.returnValue(Promise.resolve([
 			{id: 123, name: 'one'},
 			{id: 456, name: 'somename'},
 			{id: 789, name: 'three'}

@@ -10,4 +10,10 @@ describe('poeditor-client', function () {
 	it('can be required from', function () {
 		expect(typeof require('poeditor-client/src/Projects')).toBe('function');
 	});
+
+	it('returns promises', function () {
+		var Projects = require('poeditor-client/src/Projects');
+		var promise = new Projects().list();
+		expect(typeof promise.then).toBe('function');
+	});
 });
