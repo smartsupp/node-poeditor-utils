@@ -11,13 +11,15 @@ describe('Project', function () {
 	});
 
 	it('extends poeditor-client project', function () {
-		expect(this.project.name).toBe('somename');
-		expect(this.project.id).toBe(2);
-		expect(this.project.languages).toBeTruthy();
-		expect(this.project.terms).toBeTruthy();
+		expect(this.project).toEqual(jasmine.objectContaining({
+			name: 'somename',
+			id: 2,
+			languages: jasmine.any(Object),
+			terms: jasmine.any(Object)
+		}));
 	});
 
 	it('provides project utilities', function () {
-		expect(typeof this.project.utils).toBeTruthy();
+		expect(this.project.utils).toEqual(jasmine.any(Object));
 	});
 });

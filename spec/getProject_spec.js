@@ -8,23 +8,23 @@ var getProject = require('../lib/getProject');
 describe('getProject', function () {
 	beforeEach(function () {
 		spyOn(Projects.prototype, 'list').and.returnValue(new Promise.resolve([
-			{id: 1, name: '1'},
-			{id: 2, name: 'somename'},
-			{id: 3, name: '3'}
+			{id: 123, name: 'one'},
+			{id: 456, name: 'somename'},
+			{id: 789, name: 'three'}
 		]));
 	});
 
 	it('returns a promise', function () {
-		expect(typeof getProject('sometoken', 'somename').then).toBe('function');
+		expect(getProject('sometoken', 'somename').then).toEqual(jasmine.any(Function));
 	});
 
 	it('gets project data via POEditor API', function (done) {
 		getProject('sometoken', 'somename')
 		.then(function (project) {
-			expect(typeof project).toBe('object');
-			expect(project).not.toBeNull();
-			expect(project.id).toBe(2);
-			expect(project.name).toBe('somename');
+			expect(project).toEqual(jasmine.objectContaining({
+				id: 456,
+				name: 'somename'
+			}));
 			done();
 		});
 	});
