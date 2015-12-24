@@ -15,11 +15,12 @@
   "devDependencies": {
     "eslint": "^1.10.3",
     "jasmine": "^2.4.1",
-    "native-promise-only": "^0.8.1"
+    "native-promise-only": "^0.8.1",
+    "rewire": "^2.5.1"
   },
   "dependencies": {
     "bluebird": "^3.0.6",
     "immutable": "^3.7.6",
-    "poeditor-client": "janjakubnanista/poeditor-client#3bb4d3103d8e6ed3e56a0b874afee7ea5ba58685"
+    "poeditor-client": "janjakubnanista/poeditor-client#846619d1a18b7a2b4a9de11db08aa2363f06b8f4"
   }
 }
