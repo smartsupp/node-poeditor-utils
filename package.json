@@ -4,7 +4,7 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/famousgarkin/poeditor-utils.git"
+    "url": "https://github.com/famousgarkin/node-poeditor-utils.git"
   },
   "main": "index.js",
   "scripts": {
