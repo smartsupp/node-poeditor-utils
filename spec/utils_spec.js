@@ -12,4 +12,34 @@ describe('utils', function() {
 			expect(helper).toHaveBeenCalledWith('my token', 'my project');
 		});
 	});
+
+	describe('#pullTranslations', function () {
+		beforeEach(function () {
+			this.project = {};
+			this.getProject = spyOn(helpers, 'getProject').and.returnValue(Promise.resolve(this.project));
+			this.translations = [];
+			this.getTranslations = spyOn(helpers, 'getTranslations').and.returnValue(Promise.resolve(this.translations));
+			this.files = [
+				'my-translations/en.json',
+				'my-translations/de.json'
+			];
+			this.writeTranslations = spyOn(helpers, 'writeTranslations').and.returnValue(Promise.resolve(this.files));
+		});
+
+		it('returns a promise', function () {
+			expect(utils.pullTranslations('my token', 'my project', './my-translations').then).toEqual(jasmine.any(Function));
+		});
+
+		it('pulls and writes project translates', function (done) {
+			utils.pullTranslations('my token', 'my project', './my-translations')
+			.then(function (files) {
+				expect(this.getProject).toHaveBeenCalledWith('my token', 'my project');
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project);
+				expect(this.writeTranslations).toHaveBeenCalledWith(this.translations, './my-translations');
+				expect(files).toEqual(this.files);
+				done();
+			}.bind(this))
+			.catch(done.fail);
+		});
+	});
 });

@@ -3,6 +3,7 @@
 var Client = require('poeditor-client');
 var Promise = require('native-promise-only');
 var rewire = require('rewire');
+var fs = require('fs');
 
 var helpers = rewire('../lib/helpers');
 
@@ -70,18 +71,17 @@ describe('helpers', function() {
 				};
 			})));
 			this.languagesList = languagesList;
-			var project = {
+			this.project = {
 				languages: {list: languagesList}
 			};
-			spyOn(helpers, 'getProject').and.returnValue(Promise.resolve(project));
 		});
 
 		it('returns a promise', function () {
-			expect(helpers.getTranslations('my token', 'my project').then).toEqual(jasmine.any(Function));
+			expect(helpers.getTranslations(this.project).then).toEqual(jasmine.any(Function));
 		});
 
 		it('gets all the translations for all the available project languages', function (done) {
-			helpers.getTranslations('my token', 'my project')
+			helpers.getTranslations(this.project)
 			.then(function (translations) {
 				expect(this.languagesList.calls.count()).toBe(1);
 				expect(this.termsList.calls.count()).toBe(2);
@@ -91,6 +91,44 @@ describe('helpers', function() {
 					__languageCode: 'en',
 					translation: 'en 1'
 				}));
+				done();
+			}.bind(this))
+			.catch(done.fail);
+		});
+	});
+
+	describe('#writeTranslations', function () {
+		beforeEach(function () {
+			this.translations = [
+				{term: 'app.title.one', __languageCode: 'en', translation: 'en title one'},
+				{term: 'app.title.two', __languageCode: 'en', translation: 'en title two'},
+				{term: 'app.title.one', __languageCode: 'de', translation: 'de title one'},
+				{term: 'app.title.two', __languageCode: 'de', translation: 'de title two'}
+			];
+			this.writeFileAsync = spyOn(fs, 'writeFileAsync').and.callFake(function (file) {
+				return Promise.resolve(file);
+			});
+		});
+
+		it('returns a promise', function () {
+			expect(helpers.writeTranslations(this.translations, './my-translations').then).toEqual(jasmine.any(Function));
+		});
+
+		it('writes translations to files by language', function (done) {
+			helpers.writeTranslations(this.translations, './my-translations')
+			.then(function (files) {
+				expect(this.writeFileAsync.calls.count()).toBe(2);
+				expect(this.writeFileAsync.calls.first().args).toEqual([
+					'my-translations/en.json',
+					JSON.stringify({
+						'app.title.one': 'en title one',
+						'app.title.two': 'en title two'
+					})
+				]);
+				expect(files).toEqual([
+					'my-translations/en.json',
+					'my-translations/de.json'
+				]);
 				done();
 			}.bind(this))
 			.catch(done.fail);
