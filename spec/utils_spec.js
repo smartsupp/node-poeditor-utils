@@ -30,12 +30,13 @@ describe('utils', function() {
 			expect(utils.pullTranslations('my token', 'my project', './my-translations').then).toEqual(jasmine.any(Function));
 		});
 
-		it('pulls and writes project translates', function (done) {
-			utils.pullTranslations('my token', 'my project', './my-translations')
+		it('delegates to helper functions', function (done) {
+			var options = {};
+			utils.pullTranslations('my token', 'my project', './my-translations', options)
 			.then(function (files) {
 				expect(this.getProject).toHaveBeenCalledWith('my token', 'my project');
 				expect(this.getTranslations).toHaveBeenCalledWith(this.project);
-				expect(this.writeTranslations).toHaveBeenCalledWith(this.translations, './my-translations');
+				expect(this.writeTranslations).toHaveBeenCalledWith(this.translations, './my-translations', options);
 				expect(files).toEqual(this.files);
 				done();
 			}.bind(this))

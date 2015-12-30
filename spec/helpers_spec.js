@@ -119,6 +119,14 @@ describe('helpers', function() {
 			helpers.writeTranslations(this.translations, './my-translations')
 			.then(function (files) {
 				expect(this.writeFileAsync.calls.count()).toBe(2);
+				done();
+			}.bind(this))
+			.catch(done.fail);
+		});
+
+		it('writes alphabetically sorted JSON', function (done) {
+			helpers.writeTranslations(this.translations, './my-translations')
+			.then(function () {
 				expect(this.writeFileAsync.calls.first().args).toEqual([
 					'my-translations/en.json',
 					stringify({
@@ -129,13 +137,39 @@ describe('helpers', function() {
 						space: '\t'
 					})
 				]);
+				done();
+			}.bind(this))
+			.catch(done.fail);
+		});
+
+		it('resolves with a list of output files', function (done) {
+			helpers.writeTranslations(this.translations, './my-translations')
+			.then(function (files) {
 				expect(files).toEqual([
 					'my-translations/en.json',
 					'my-translations/de.json'
 				]);
 				done();
-			}.bind(this))
+			})
 			.catch(done.fail);
+		});
+
+		describe('[languages] option', function () {
+			it('allows to override language codes', function (done) {
+				helpers.writeTranslations(this.translations, './my-translations', {
+					languages: {
+						'en': 'my_en'
+					}
+				})
+				.then(function (files) {
+					expect(files).toEqual([
+						'my-translations/my_en.json',
+						'my-translations/de.json'
+					]);
+					done();
+				})
+				.catch(done.fail);
+			});
 		});
 	});
 });
