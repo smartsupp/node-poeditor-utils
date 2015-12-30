@@ -1,6 +1,6 @@
 # poeditor-utils
 
-[![Build Status](https://travis-ci.org/famousgarkin/poeditor-utils.svg?branch=master)](https://travis-ci.org/famousgarkin/poeditor-utils)
+[![Build Status](https://travis-ci.org/famousgarkin/node-poeditor-utils.svg?branch=master)](https://travis-ci.org/famousgarkin/node-poeditor-utils)
 
 high-level [POEditor](https://poeditor.com/) utilities for Node.js
 
