@@ -70,17 +70,18 @@ describe('helpers', function() {
 				};
 			})));
 			this.languagesList = languagesList;
-			this.project = {
+			var project = {
 				languages: {list: languagesList}
 			};
+			spyOn(helpers, 'getProject').and.returnValue(Promise.resolve(project));
 		});
 
 		it('returns a promise', function () {
-			expect(helpers.getTranslations(this.project).then).toEqual(jasmine.any(Function));
+			expect(helpers.getTranslations('my token', 'my project').then).toEqual(jasmine.any(Function));
 		});
 
 		it('gets all the translations for all the available project languages', function (done) {
-			helpers.getTranslations(this.project)
+			helpers.getTranslations('my token', 'my project')
 			.then(function (translations) {
 				expect(this.languagesList.calls.count()).toBe(1);
 				expect(this.termsList.calls.count()).toBe(2);
