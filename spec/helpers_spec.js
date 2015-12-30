@@ -123,7 +123,7 @@ describe('helpers', function() {
 					JSON.stringify({
 						'app.title.one': 'en title one',
 						'app.title.two': 'en title two'
-					})
+					}, null, '\t')
 				]);
 				expect(files).toEqual([
 					'my-translations/en.json',
