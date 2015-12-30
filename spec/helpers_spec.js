@@ -4,6 +4,7 @@ var Client = require('poeditor-client');
 var Promise = require('native-promise-only');
 var rewire = require('rewire');
 var fs = require('fs');
+var stringify = require('json-stable-stringify');
 
 var helpers = rewire('../lib/helpers');
 
@@ -120,11 +121,13 @@ describe('helpers', function() {
 				expect(this.writeFileAsync.calls.count()).toBe(2);
 				expect(this.writeFileAsync.calls.first().args).toEqual([
 					'my-translations/en.json',
-					JSON.stringify({
+					stringify({
 						'app.title.1': 'en title one',
 						'app.title.2': 'en title two',
 						'app.title.3': 'en title three'
-					}, null, '\t')
+					}, {
+						space: '\t'
+					})
 				]);
 				expect(files).toEqual([
 					'my-translations/en.json',
