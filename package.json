@@ -21,6 +21,7 @@
   "dependencies": {
     "bluebird": "^3.0.6",
     "immutable": "^3.7.6",
+    "json-stable-stringify": "^1.0.0",
     "poeditor-client": "janjakubnanista/poeditor-client#846619d1a18b7a2b4a9de11db08aa2363f06b8f4"
   }
 }

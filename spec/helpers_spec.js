@@ -100,10 +100,10 @@ describe('helpers', function() {
 	describe('#writeTranslations', function () {
 		beforeEach(function () {
 			this.translations = [
-				{term: 'app.title.one', __languageCode: 'en', translation: 'en title one'},
-				{term: 'app.title.two', __languageCode: 'en', translation: 'en title two'},
-				{term: 'app.title.one', __languageCode: 'de', translation: 'de title one'},
-				{term: 'app.title.two', __languageCode: 'de', translation: 'de title two'}
+				{term: 'app.title.3', __languageCode: 'en', translation: 'en title three'},
+				{term: 'app.title.2', __languageCode: 'en', translation: 'en title two'},
+				{term: 'app.title.1', __languageCode: 'en', translation: 'en title one'},
+				{term: 'app.title.one', __languageCode: 'de', translation: 'de title one'}
 			];
 			this.writeFileAsync = spyOn(fs, 'writeFileAsync').and.callFake(function (file) {
 				return Promise.resolve(file);
@@ -121,8 +121,9 @@ describe('helpers', function() {
 				expect(this.writeFileAsync.calls.first().args).toEqual([
 					'my-translations/en.json',
 					JSON.stringify({
-						'app.title.one': 'en title one',
-						'app.title.two': 'en title two'
+						'app.title.1': 'en title one',
+						'app.title.2': 'en title two',
+						'app.title.3': 'en title three'
 					}, null, '\t')
 				]);
 				expect(files).toEqual([
