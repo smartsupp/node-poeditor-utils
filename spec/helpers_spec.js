@@ -37,13 +37,6 @@ describe('helpers', function() {
 				}
 			};
 			var clientFactory = spyOn(helpers, 'clientFactory').and.returnValue(client);
-			this.restore = helpers.__set__({
-				clientFactory: clientFactory
-			});
-		});
-
-		afterEach(function () {
-			this.restore();
 		});
 
 		it('returns a promise', function () {
