@@ -1,7 +1,7 @@
 {
   "name": "poeditor-utils",
   "version": "0.0.0",
-  "description": "commonly required high-level POEditor utilities",
+  "description": "high-level POEditor utilities",
   "repository": {
     "type": "git",
     "url": "https://github.com/famousgarkin/node-poeditor-utils.git"
