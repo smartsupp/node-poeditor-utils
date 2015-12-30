@@ -1,11 +1,11 @@
 'use strict';
 
-var Utils = require('../lib/Utils');
+var utils = require('../lib/utils');
 
 var index = require('../index');
 
 describe('index', function () {
-	it('exports Utils', function () {
-		expect(index).toBe(Utils);
+	it('exports utils', function () {
+		expect(index).toBe(utils);
 	});
 });

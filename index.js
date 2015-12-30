@@ -1,1 +1,1 @@
-module.exports = require('./lib/Utils');
+module.exports = require('./lib/utils');

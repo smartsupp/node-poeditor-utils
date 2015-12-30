@@ -2,17 +2,13 @@
 
 var helpers = require('../lib/helpers');
 
-var Utils = require('../lib/Utils');
+var utils = require('../lib/utils');
 
-describe('Utils', function() {
-	beforeEach(function () {
-		this.utils = new Utils('my token');
-	});
-
+describe('utils', function() {
 	describe('#getProject', function () {
 		it('delegates to helpers.getProject', function () {
 			var helper = spyOn(helpers, 'getProject');
-			this.utils.getProject('my project');
+			utils.getProject('my token', 'my project');
 			expect(helper).toHaveBeenCalledWith('my token', 'my project');
 		});
 	});
