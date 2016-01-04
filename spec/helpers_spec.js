@@ -106,7 +106,7 @@ describe('helpers', function() {
 		});
 
 		describe('result', function () {
-			it('allows to override language codes', function (done) {
+			it('allows to override languages', function (done) {
 				helpers.getTranslations(this.project)
 				.then(function (translations) {
 					var languages = {
@@ -117,6 +117,19 @@ describe('helpers', function() {
 					});
 					expect(translations).toContain(jasmine.objectContaining({
 						language: 'my-en'
+					}));
+					done();
+				});
+			});
+
+			it('allows to override terms', function (done) {
+				helpers.getTranslations(this.project)
+				.then(function (translations) {
+					translations.forEach(function (translation) {
+						translation.term = translation.term.split('.').slice(1).join('.');
+					});
+					expect(translations).toContain(jasmine.objectContaining({
+						term: 'title.1'
 					}));
 					done();
 				});
