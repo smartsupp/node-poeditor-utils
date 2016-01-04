@@ -7,6 +7,7 @@ var fs = require('fs');
 var stringify = require('json-stable-stringify');
 
 var helpers = rewire('../lib/helpers');
+var Translation = require('../lib/Translation');
 
 describe('helpers', function () {
 	describe('#clientFactory', function () {
@@ -60,16 +61,19 @@ describe('helpers', function() {
 
 	describe('#getTranslations', function () {
 		beforeEach(function () {
-			var termsList = jasmine.createSpy('Terms.list').and.callFake(function (languageCode) {
+			var termsList = jasmine.createSpy('Terms.list').and.callFake(function (language) {
 				return Promise.resolve([1, 2].map(function (i) {
-					return {term: 'app.title.' + i, __languageCode: languageCode, translation: languageCode + ' ' + i};
+					return {term: 'app.title.' + i, translation: language.code + ' ' + i};
 				}));
 			});
 			this.termsList = termsList;
 			var languagesList = jasmine.createSpy('Languages.list').and.returnValue(Promise.resolve(['en', 'de'].map(function (languageCode) {
-				return {
-					terms: {list: function() { return termsList(languageCode); }}
+				var language = {
+					code: languageCode,
+					terms: {}
 				};
+				language.terms.list = function() { return termsList(language); };
+				return language;
 			})));
 			this.languagesList = languagesList;
 			this.project = {
@@ -87,10 +91,11 @@ describe('helpers', function() {
 				expect(this.languagesList.calls.count()).toBe(1);
 				expect(this.termsList.calls.count()).toBe(2);
 				expect(translations.length).toBe(4);
+				expect(translations[0]).toEqual(jasmine.any(Translation));
 				expect(translations[0]).toEqual(jasmine.objectContaining({
 					term: 'app.title.1',
-					__languageCode: 'en',
-					translation: 'en 1'
+					language: 'en',
+					value: 'en 1'
 				}));
 				done();
 			}.bind(this))
@@ -101,10 +106,10 @@ describe('helpers', function() {
 	describe('#writeTranslations', function () {
 		beforeEach(function () {
 			this.translations = [
-				{term: 'app.title.3', __languageCode: 'en', translation: 'en title three'},
-				{term: 'app.title.2', __languageCode: 'en', translation: 'en title two'},
-				{term: 'app.title.1', __languageCode: 'en', translation: 'en title one'},
-				{term: 'app.title.one', __languageCode: 'de', translation: 'de title one'}
+				{term: 'app.title.3', language: 'en', value: 'en title three'},
+				{term: 'app.title.2', language: 'en', value: 'en title two'},
+				{term: 'app.title.1', language: 'en', value: 'en title one'},
+				{term: 'app.title.1', language: 'de', value: 'de title one'}
 			];
 			this.writeFileAsync = spyOn(fs, 'writeFileAsync').and.callFake(function (file) {
 				return Promise.resolve(file);
