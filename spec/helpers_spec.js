@@ -46,7 +46,10 @@ describe('helpers', function() {
 			expect(helpers.getProject('my token', 'my project').then).toEqual(jasmine.any(Function));
 		});
 
-		it('gets project data', function (done) {
+		xit('delegates to poeditor-client Client', function () {
+		});
+
+		it('resolves with project data', function (done) {
 			helpers.getProject('my token', 'my project')
 			.then(function (project) {
 				expect(project).toEqual(jasmine.objectContaining({
@@ -85,14 +88,14 @@ describe('helpers', function() {
 			expect(helpers.getTranslations(this.project).then).toEqual(jasmine.any(Function));
 		});
 
-		it('gets all the translations for all the available project languages', function (done) {
+		it('resolves with all the translations for all the available project languages', function (done) {
 			helpers.getTranslations(this.project)
 			.then(function (translations) {
 				expect(this.languagesList.calls.count()).toBe(1);
 				expect(this.termsList.calls.count()).toBe(2);
 				expect(translations.length).toBe(4);
-				expect(translations[0]).toEqual(jasmine.any(Translation));
-				expect(translations[0]).toEqual(jasmine.objectContaining({
+				expect(translations).toContain(jasmine.any(Translation));
+				expect(translations).toContain(jasmine.objectContaining({
 					term: 'app.title.1',
 					language: 'en',
 					value: 'en 1'
@@ -100,6 +103,24 @@ describe('helpers', function() {
 				done();
 			}.bind(this))
 			.catch(done.fail);
+		});
+
+		describe('result', function () {
+			it('allows to override language codes', function (done) {
+				helpers.getTranslations(this.project)
+				.then(function (translations) {
+					var languages = {
+						'en': 'my-en'
+					};
+					translations.forEach(function (translation) {
+						translation.language = languages[translation.language] || translation.language;
+					});
+					expect(translations).toContain(jasmine.objectContaining({
+						language: 'my-en'
+					}));
+					done();
+				});
+			});
 		});
 	});
 
@@ -157,24 +178,6 @@ describe('helpers', function() {
 				done();
 			})
 			.catch(done.fail);
-		});
-
-		describe('[languages] option', function () {
-			it('allows to override language codes', function (done) {
-				helpers.writeTranslations(this.translations, './my-translations', {
-					languages: {
-						'en': 'my_en'
-					}
-				})
-				.then(function (files) {
-					expect(files).toEqual([
-						'my-translations/my_en.json',
-						'my-translations/de.json'
-					]);
-					done();
-				})
-				.catch(done.fail);
-			});
 		});
 	});
 });
