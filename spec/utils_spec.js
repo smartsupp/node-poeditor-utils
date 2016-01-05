@@ -19,14 +19,9 @@ describe('utils', function() {
 			this.getProject = spyOn(helpers, 'getProject').and.returnValue(Promise.resolve(this.project));
 			this.translations = [];
 			this.getTranslations = spyOn(helpers, 'getTranslations').and.returnValue(Promise.resolve(this.translations));
-			this.files = [
-				'my-translations/en.json',
-				'my-translations/de.json'
-			];
+			this.files = [];
 			this.writeTranslations = spyOn(helpers, 'writeTranslations').and.returnValue(Promise.resolve(this.files));
-			this.getFile = function (translation) {
-				return './my-translations/' + translation.language + '.json';
-			};
+			this.getFile = jasmine.createSpy();
 		});
 
 		it('returns a promise', function () {
