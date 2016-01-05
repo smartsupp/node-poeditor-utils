@@ -29,12 +29,11 @@ describe('utils', function() {
 		});
 
 		it('delegates to helper functions', function (done) {
-			var options = {};
-			utils.pullTranslations('my token', 'my project', this.getFile, options)
+			utils.pullTranslations('my token', 'my project', this.getFile)
 			.then(function (files) {
 				expect(this.getProject).toHaveBeenCalledWith('my token', 'my project');
 				expect(this.getTranslations).toHaveBeenCalledWith(this.project);
-				expect(this.writeTranslations).toHaveBeenCalledWith(this.translations, this.getFile, options);
+				expect(this.writeTranslations).toHaveBeenCalledWith(this.translations, this.getFile);
 				expect(files).toEqual(this.files);
 				done();
 			}.bind(this))
