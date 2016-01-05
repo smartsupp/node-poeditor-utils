@@ -148,14 +148,17 @@ describe('helpers', function() {
 			this.writeFileAsync = spyOn(fs, 'writeFileAsync').and.callFake(function (file) {
 				return Promise.resolve(file);
 			});
+			this.getFile = function (translation) {
+				return './my-translations/' + translation.language + '.json';
+			};
 		});
 
 		it('returns a promise', function () {
-			expect(helpers.writeTranslations(this.translations, './my-translations').then).toEqual(jasmine.any(Function));
+			expect(helpers.writeTranslations(this.translations, this.getFile).then).toEqual(jasmine.any(Function));
 		});
 
 		it('writes translations to files by language', function (done) {
-			helpers.writeTranslations(this.translations, './my-translations')
+			helpers.writeTranslations(this.translations, this.getFile)
 			.then(function (files) {
 				expect(this.writeFileAsync.calls.count()).toBe(2);
 				done();
@@ -164,10 +167,10 @@ describe('helpers', function() {
 		});
 
 		it('writes alphabetically sorted JSON', function (done) {
-			helpers.writeTranslations(this.translations, './my-translations')
+			helpers.writeTranslations(this.translations, this.getFile)
 			.then(function () {
 				expect(this.writeFileAsync.calls.first().args).toEqual([
-					'my-translations/en.json',
+					'./my-translations/en.json',
 					stringify({
 						'app.title.1': 'en title one',
 						'app.title.2': 'en title two',
@@ -182,11 +185,11 @@ describe('helpers', function() {
 		});
 
 		it('resolves with a list of output files', function (done) {
-			helpers.writeTranslations(this.translations, './my-translations')
+			helpers.writeTranslations(this.translations, this.getFile)
 			.then(function (files) {
 				expect(files).toEqual([
-					'my-translations/en.json',
-					'my-translations/de.json'
+					'./my-translations/en.json',
+					'./my-translations/de.json'
 				]);
 				done();
 			})
