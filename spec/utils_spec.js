@@ -8,26 +8,10 @@ var stringify = require('json-stable-stringify');
 var utils = rewire('../lib/utils');
 var Translation = require('../lib/Translation');
 
-describe('utils', function () {
-	describe('#clientFactory', function () {
-		it('delegates to poeditor-client', function () {
-			var client = {};
-			var Client = jasmine.createSpy().and.returnValue(client);
-			utils.__with__({
-				Client: Client
-			})(function () {
-				utils.clientFactory('my token');
-				expect(utils.clientFactory('my token')).toBe(client);
-			})
-			expect(Client).toHaveBeenCalledWith('my token');
-		});
-	});
-});
-
 describe('utils', function() {
 	describe('#getProject', function () {
 		beforeEach(function () {
-			var client = {
+			this.client = {
 				projects: {
 					list: jasmine.createSpy().and.returnValue(Promise.resolve([
 						{id: 123, name: 'one'},
@@ -36,16 +20,31 @@ describe('utils', function() {
 					]))
 				}
 			};
-			var clientFactory = spyOn(utils, 'clientFactory').and.returnValue(client);
+			this.Client = jasmine.createSpy().and.returnValue(this.client);
+			this.revert = utils.__set__({
+				Client: this.Client
+			});
+		});
+
+		afterEach(function () {
+			this.revert();
 		});
 
 		it('returns a promise', function () {
 			expect(utils.getProject('my token', 'my project').then).toEqual(jasmine.any(Function));
 		});
 
-		xit('delegates to poeditor-client');
+		it('delegates to poeditor-client', function (done) {
+			utils.getProject('my token', 'my project')
+			.then(function () {
+				expect(this.Client).toHaveBeenCalledWith('my token');
+				expect(this.client.projects.list).toHaveBeenCalled();
+				done();
+			}.bind(this))
+			.catch(done.fail);
+		});
 
-		it('resolves with project data', function (done) {
+		it('resolves with required project data', function (done) {
 			utils.getProject('my token', 'my project')
 			.then(function (project) {
 				expect(project).toEqual(jasmine.objectContaining({
@@ -84,11 +83,19 @@ describe('utils', function() {
 			expect(utils.getTranslations(this.project).then).toEqual(jasmine.any(Function));
 		});
 
-		it('resolves with all the translations for all the available project languages', function (done) {
+		it('delegates to poeditor-client', function (done) {
 			utils.getTranslations(this.project)
-			.then(function (translations) {
+			.then(function () {
 				expect(this.languagesList.calls.count()).toBe(1);
 				expect(this.termsList.calls.count()).toBe(2);
+				done();
+			}.bind(this))
+			.catch(done.fail);
+		});
+
+		it('resolves with translations for all the available project languages', function (done) {
+			utils.getTranslations(this.project)
+			.then(function (translations) {
 				expect(translations.length).toBe(4);
 				expect(translations).toContain(jasmine.any(Translation));
 				expect(translations).toContain(jasmine.objectContaining({
@@ -97,7 +104,7 @@ describe('utils', function() {
 					value: 'en 1'
 				}));
 				done();
-			}.bind(this))
+			})
 			.catch(done.fail);
 		});
 	});
