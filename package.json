@@ -1,17 +1,20 @@
 {
   "name": "poeditor-utils",
-  "version": "0.0.0",
-  "description": "high-level POEditor utilities",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/famousgarkin/node-poeditor-utils.git"
-  },
+  "version": "0.1.0",
+  "description": "high-level POEditor API utilities",
+  "keywords": [
+    "POEditor",
+    "localization",
+    "api",
+    "utility"
+  ],
+  "homepage": "https://github.com/famousgarkin/node-poeditor-utils",
+  "license": "MIT",
+  "author": "Ján Dzurek <famousgarkin@outlook.com>",
   "main": "index.js",
   "scripts": {
     "test": "jasmine"
   },
-  "author": "Ján Dzurek <famousgarkin@outlook.com>",
-  "license": "MIT",
   "devDependencies": {
     "eslint": "^1.10.3",
     "jasmine": "^2.4.1",
