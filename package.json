@@ -8,7 +8,7 @@
     "api",
     "utility"
   ],
-  "homepage": "https://github.com/famousgarkin/node-poeditor-utils",
+  "homepage": "https://github.com/smartsupp/node-poeditor-utils",
   "license": "MIT",
   "author": "Ján Dzurek <famousgarkin@outlook.com>",
   "main": "index.js",
