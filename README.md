@@ -1,7 +1,5 @@
 # poeditor-utils
 
-[![Build Status](https://travis-ci.org/famousgarkin/node-poeditor-utils.svg?branch=master)](https://travis-ci.org/famousgarkin/node-poeditor-utils)
-
 high-level [POEditor API][1] utilities for Node.js
 
 * based around [poeditor-client][2]
@@ -31,8 +29,8 @@ utils.getProject('my token', 'my project')
 * `projectName` `String` POEditor project name
 * `getPathCallback(translation)` `Function` produces destination file path for given translation
 	* `translation` `Object` translation of a single term to a single language
-		* `translation.term` `String`  
-		* `translation.language` `String`  
+		* `translation.term` `String`
+		* `translation.language` `String`
 		* `translation.value` `String`
 
 Gets translations for all the project languages and writes them to files as produced by `getPathCallback` as a stable sorted JSON. Returns a promise which resolves with an `Iterable` of output files.
@@ -58,7 +56,6 @@ Exposes the [poeditor-client][2]  `Client` for practicality. See the docs there 
 ```js
 var client = new utils.Client('my token');
 ```
-
 
 [1]: https://poeditor.com/api_reference/
 [2]: https://github.com/janjakubnanista/poeditor-client

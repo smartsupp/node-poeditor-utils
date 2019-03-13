@@ -13,7 +13,7 @@
   "author": "Ján Dzurek <famousgarkin@outlook.com>",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "make test"
   },
   "devDependencies": {
     "eslint": "^1.10.3",
