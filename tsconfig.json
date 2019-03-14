@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"outDir": "",
+		"declaration": true
+	},
+	"include": [
+		"./src"
+	]
+}

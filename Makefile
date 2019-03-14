@@ -1,12 +1,17 @@
-.PHONY: default
+.PHONY: default install build test release
 
 default:
 
 install:
+	rm -rf ./node_modules
 	npm install
 
-test:
-	./node_modules/.bin/jasmine
+build:
+	rm -rf ./lib ./index.js ./index.d.ts
+	./node_modules/.bin/tsc
 
-publish: test
-	npm publish
+test:
+	./node_modules/.bin/ts-node ./node_modules/.bin/jasmine
+
+release: install build test
+	npm publish --dry-run

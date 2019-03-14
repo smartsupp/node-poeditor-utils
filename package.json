@@ -11,20 +11,30 @@
   "homepage": "https://github.com/smartsupp/node-poeditor-utils",
   "license": "MIT",
   "author": "Ján Dzurek <famousgarkin@outlook.com>",
-  "main": "index.js",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "files": [
+    "/lib",
+    "/index.js",
+    "/index.d.ts"
+  ],
   "scripts": {
     "test": "make test"
   },
-  "devDependencies": {
-    "eslint": "^1.10.3",
-    "jasmine": "^2.4.1",
-    "native-promise-only": "^0.8.1",
-    "rewire": "^2.5.1"
-  },
   "dependencies": {
-    "bluebird": "^3.0.6",
+    "@types/bluebird": "^3.5.26",
+    "@types/node": "^11.11.3",
+    "bluebird": "^3.5.3",
     "immutable": "^3.7.6",
     "json-stable-stringify": "^1.0.0",
     "poeditor-client": "0.0.4"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^3.3.9",
+    "jasmine": "^2.4.1",
+    "native-promise-only": "^0.8.1",
+    "rewire": "^2.5.1",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.3.3333"
   }
 }
