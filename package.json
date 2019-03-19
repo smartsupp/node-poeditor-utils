@@ -13,12 +13,10 @@
   },
   "license": "MIT",
   "author": "Ján Dzurek <famousgarkin@outlook.com>",
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
-    "/lib",
-    "/index.js",
-    "/index.d.ts"
+    "/lib"
   ],
   "scripts": {
     "test": "make test"

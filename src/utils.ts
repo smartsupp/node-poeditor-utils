@@ -3,7 +3,6 @@ import * as bluebird from 'bluebird'
 import * as Immutable from 'immutable'
 import * as stringify from 'json-stable-stringify'
 
-import {default as Translation} from './Translation'
 import * as fs from './fs'
 
 export async function getProject(apiToken: string, projectName: string): Promise<Project> {
@@ -46,6 +45,18 @@ export async function getTranslations(project: Project) {
 	.then(function (translations) {
 		return Immutable.fromJS(translations).flatten(1).toJS()
 	})
+}
+
+export class Translation {
+	term: string
+	language: string
+	value: string
+
+	constructor(term, language, value) {
+		this.term = term
+		this.language = language
+		this.value = value
+	}
 }
 
 export type getPathCallback = (translation: Translation) => string

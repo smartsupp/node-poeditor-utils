@@ -7,7 +7,7 @@ install:
 	npm install
 
 build:
-	rm -rf ./lib ./index.js ./index.d.ts
+	rm -rf ./lib
 	./node_modules/.bin/tsc
 
 test:
