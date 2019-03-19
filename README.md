@@ -1,9 +1,12 @@
 # poeditor-utils
 
-high-level [POEditor API][1] utilities for Node.js
+higher-level POEditor utilities for Node.js
 
-* based around [poeditor-client][2]
-* API is a subject to change
+* uses [POEditor API v1][1] via [poeditor-client][2]
+* API is still a subject to change
+
+[1]: https://poeditor.com/api_reference/
+[2]: https://github.com/janjakubnanista/poeditor-client
 
 ```js
 var utils = require('poeditor-utils');
@@ -56,6 +59,3 @@ Exposes the [poeditor-client][2]  `Client` for practicality. See the docs there 
 ```js
 var client = new utils.Client('my token');
 ```
-
-[1]: https://poeditor.com/api_reference/
-[2]: https://github.com/janjakubnanista/poeditor-client
