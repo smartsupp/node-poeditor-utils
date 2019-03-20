@@ -1,37 +1,19 @@
-import * as Client from 'poeditor-client'
 import * as bluebird from 'bluebird'
 import * as Immutable from 'immutable'
 import * as stringify from 'json-stable-stringify'
 
+import {createClient, Project} from './client'
 import * as fs from './fs'
 
 export async function getProject(apiToken: string, projectName: string): Promise<Project> {
-	var client = new Client(apiToken)
+	var client = createClient(apiToken)
 	return bluebird.Promise.resolve(client.projects.list())
 	.then(function (projects) {
-		return Immutable.List<any>(projects)
+		return Immutable.List(projects)
 		.find(function (project) {
 			return project.name == projectName
 		})
 	})
-}
-
-export interface Project {
-	languages: {
-		list: () => Iterable<Language>
-	}
-}
-
-export interface Language {
-	code: string
-	terms: {
-		list: () => Iterable<Term>
-	}
-}
-
-export interface Term {
-	term: string
-	translation: string
 }
 
 export async function getTranslations(project: Project) {

@@ -12,7 +12,19 @@ higher-level POEditor utilities for Node.js
 var utils = require('poeditor-utils');
 ```
 
-## utils.getProject(apiToken, projectName)
+## utils.Client [DEPRECATED]
+
+Exposes the [poeditor-client][2]  `Client` for practicality. See the docs there for more.
+
+### new utils.Client(apiToken)
+
+* `apiToken`: POEditor API token
+
+```js
+var client = new utils.Client('my token');
+```
+
+## utils.getProject(apiToken, projectName) [DEPRECATED]
 
 * `apiToken` `String` POEditor API token
 * `projectName` `String` POEditor project name
@@ -46,16 +58,4 @@ utils.pullTranslations('my token', 'my project', function (translation) {
 .then(function (files) {
 	console.log(files); // ['my-translations/en.json', ...]
 });
-```
-
-## utils.Client
-
-Exposes the [poeditor-client][2]  `Client` for practicality. See the docs there for more.
-
-### new utils.Client(apiToken)
-
-* `apiToken`: POEditor API token
-
-```js
-var client = new utils.Client('my token');
 ```
