@@ -32,7 +32,6 @@
   "devDependencies": {
     "@types/jasmine": "^3.3.9",
     "jasmine": "^2.4.1",
-    "native-promise-only": "^0.8.1",
     "ts-node": "^8.0.3",
     "typescript": "^3.3.3333"
   }

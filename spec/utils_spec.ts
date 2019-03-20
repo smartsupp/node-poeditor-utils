@@ -1,4 +1,4 @@
-import * as Promise from 'native-promise-only'
+import * as bluebird from 'bluebird'
 import * as stringify from 'json-stable-stringify'
 
 import * as utils from '../src/utils'
@@ -122,7 +122,7 @@ describe('utils', function () {
 				{term: 'app.title.1', language: 'de', value: 'de title one'},
 			]
 			this.writeFile = spyOn(fs, 'writeFileAsync').and.callFake(function (file) {
-				return Promise.resolve(file)
+				return bluebird.resolve(file)
 			})
 			this.getFile = function (translation) {
 				return './my-translations/' + translation.language + '.json'
