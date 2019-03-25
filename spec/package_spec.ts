@@ -1,24 +1,54 @@
 import * as utils from '..'
 
-describe('package', function () {
-	it('exports meaningful stuff', function () {
-		expect(utils.getProject).toEqual(jasmine.any(Function))
+const apiToken = process.env.TEST_API_TOKEN
+const projectName = process.env.TEST_PROJECT_NAME
+
+describe('package', () => {
+	it('exports meaningful stuff', () => {
 		expect(utils.pullTranslations).toBe(utils.pullTranslations)
 	})
+})
 
-	describe('backwards compatibility', function () {
-		it('still exports poeditor-client constructor', function () {
-			expect(utils.Client).toEqual(jasmine.any(Function))
-		})
+describe('package usage', () => {
+	const originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
 
-		it('still exports lib/utils internals', function() {
-			let libUtils
-			expect(function () {
-				libUtils = require('../lib/utils')
-			}).not.toThrow()
-			expect(libUtils.getProject).toEqual(jasmine.any(Function))
-			expect(libUtils.getTranslations).toEqual(jasmine.any(Function))
-			expect(libUtils.writeTranslations).toEqual(jasmine.any(Function))
-		})
+	beforeEach(() => {
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
+	})
+
+	it('works as intended', async () => {
+		if (apiToken && projectName) {
+			const languages = {
+				'en': 'english',
+			}
+			const paths = await utils.pullTranslations(apiToken, projectName, (translation) => {
+				const language = languages[translation.language] || translation.language
+				return `./spec/tmp/${language}.json`
+			})
+			expect(paths).toContain(`./spec/tmp/english.json`)
+		} else {
+			expect().nothing
+		}
+	})
+
+	afterEach(() => {
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout
+	})
+})
+
+describe('package backwards compatibility', () => {
+	it('still exports poeditor-client shizz', () => {
+		expect(utils.Client).toEqual(jasmine.any(Function))
+		expect(utils.getProject).toEqual(jasmine.any(Function))
+	})
+
+	it('still exports lib/utils internals', () => {
+		let libUtils
+		expect(() => {
+			libUtils = require('../lib/utils')
+		}).not.toThrow()
+		expect(libUtils.getProject).toEqual(jasmine.any(Function))
+		expect(libUtils.getTranslations).toEqual(jasmine.any(Function))
+		expect(libUtils.writeTranslations).toEqual(jasmine.any(Function))
 	})
 })

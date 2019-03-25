@@ -11,6 +11,7 @@ build:
 	./node_modules/.bin/tsc
 
 test:
+	rm -rf ./spec/tmp
 	./node_modules/.bin/ts-node ./node_modules/.bin/jasmine
 
 release: install build test
