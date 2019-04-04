@@ -1,4 +1,4 @@
-.PHONY: default install build test release
+.PHONY: default install build test pack publish release
 
 default:
 
@@ -14,5 +14,11 @@ test:
 	rm -rf ./spec/tmp
 	./node_modules/.bin/ts-node ./node_modules/.bin/jasmine
 
-release: install build test
-	npm publish --dry-run
+pack:
+	rm ./poeditor-utils-*.tgz || :
+	npm pack
+
+publish:
+	set -x; npm publish $$(npm pack --dry-run --quiet) --dry-run
+
+release: install build test pack publish
