@@ -1,3 +1,5 @@
+import * as util from 'util'
+
 import * as bluebird from 'bluebird'
 import * as Immutable from 'immutable'
 import * as stringify from 'json-stable-stringify'
@@ -16,12 +18,17 @@ export async function getProject(apiToken: string, projectName: string): Promise
 	})
 }
 
-export async function getTranslations(project: Project) {
+export async function getTranslations(project: Project): Promise<Translation[]> {
 	return bluebird.Promise.resolve(project.languages.list())
 	.map(function (language) {
 		return bluebird.Promise.resolve(language.terms.list())
 		.map(function (term) {
-			return new Translation(term.term, language.code, term.translation)
+			const translation = new LegacyTranslation()
+			translation.projectName = project.name
+			translation.languageCode = language.code
+			translation.term = term.term
+			translation.value = term.translation
+			return translation
 		})
 	})
 	.then(function (translations) {
@@ -29,22 +36,37 @@ export async function getTranslations(project: Project) {
 	})
 }
 
-export class Translation {
-	term: string
+export interface Translation {
+	projectName: string
+	languageCode: string
 	language: string
+	term: string
+	value: string
+}
+
+export class LegacyTranslation implements Translation {
+	projectName: string
+	languageCode: string
+	term: string
 	value: string
 
-	constructor(term, language, value) {
-		this.term = term
-		this.language = language
-		this.value = value
+	get language(): string {
+		return translationGetLanguageDeprecation(this)
+	}
+
+	set language(value: string) {
+		translationSetLanguageDeprecation(this, value)
 	}
 }
 
+const translationLanguageDeprecate = (fn) => util.deprecate(fn, 'poeditor-utils Translation.language is deprecated and will be removed in future versions. Please use Translation.languageCode instead.')
+const translationGetLanguageDeprecation = translationLanguageDeprecate((translation: Translation) => translation.languageCode)
+const translationSetLanguageDeprecation = translationLanguageDeprecate((translation: Translation, value: string) => translation.languageCode = value)
+
 export type getPathCallback = (translation: Translation) => string
 
-export async function writeTranslations(translations: Translation[], getPathCallback: getPathCallback) {
 	var writes = Immutable.List(translations)
+export async function writeTranslations(translations: Translation[], getPathCallback: getPathCallback) {
 	.groupBy(getPathCallback)
 	.map(function (translations) {
 		return Immutable.List<any>(translations)
@@ -54,7 +76,7 @@ export async function writeTranslations(translations: Translation[], getPathCall
 	})
 	.map(function (translations, file: string) {
 		var data = stringify(translations, {
-			space: '\t'
+			space: '\t',
 		})
 		return (<any>fs.writeFileAsync)(file, data)
 		.then(function () {

@@ -22,7 +22,7 @@ describe('package usage', () => {
 				'en': 'english',
 			}
 			const paths = await utils.pullTranslations(apiToken, projectName, (translation) => {
-				const language = languages[translation.language] || translation.language
+				const language = languages[translation.languageCode] || translation.languageCode
 				return `./spec/tmp/${language}.json`
 			})
 			expect(paths).toContain(`./spec/tmp/english.json`)

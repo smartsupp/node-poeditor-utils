@@ -18,7 +18,7 @@ Exposes the [poeditor-client][2]  `Client` for practicality. See the docs there 
 
 ### new utils.Client(apiToken)
 
-* `apiToken`: POEditor API token
+* `apiToken` `String` POEditor API token
 
 ```js
 var client = new utils.Client('my token');
@@ -44,8 +44,9 @@ utils.getProject('my token', 'my project')
 * `projectName` `String` POEditor project name
 * `getPathCallback(translation)` `Function` produces destination file path for given translation
 	* `translation` `Object` translation of a single term to a single language
+		* `translation.projectName` `String`
+		* `translation.languageCode` `String`
 		* `translation.term` `String`
-		* `translation.language` `String`
 		* `translation.value` `String`
 
 Gets translations for all the project languages and writes them to files as produced by `getPathCallback` as a stable sorted JSON. Returns a promise which resolves with an `Iterable` of output files.
@@ -53,7 +54,7 @@ Gets translations for all the project languages and writes them to files as prod
 ```js
 utils.pullTranslations('my token', 'my project', function (translation) {
 	console.log(translation); // Translation {...}
-	return 'my-translations/' + translation.language + '.json';
+	return 'my-translations/' + translation.languageCode + '.json';
 })
 .then(function (files) {
 	console.log(files); // ['my-translations/en.json', ...]
