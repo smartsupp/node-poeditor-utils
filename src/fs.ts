@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import * as bluebird from 'bluebird'
+import * as util from 'util'
 
 export * from 'fs'
-export const writeFileAsync = bluebird.promisify(fs.writeFile)
+export const writeFileAsync = util.promisify(fs.writeFile)

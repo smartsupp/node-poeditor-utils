@@ -1,6 +1,3 @@
-import * as bluebird from 'bluebird'
-import * as stringify from 'json-stable-stringify'
-
 import * as utils from '../src/utils'
 import * as client from '../src/client'
 import * as fs from '../src/fs'
@@ -37,9 +34,7 @@ describe('utils', function () {
 					])),
 				},
 			}
-			this.createClient = spyOn(client, 'createClient').and.callFake(function (apiToken) {
-				return this.client
-			}.bind(this))
+			this.createClient = spyOn(client, 'createClient').and.returnValue(this.client)
 		})
 
 		it('returns a promise', function (done) {
@@ -135,6 +130,34 @@ describe('utils', function () {
 		})
 	})
 
+	describe('groupTranslations', function () {
+		it('works', function () {
+			const translations = [
+				{languageCode: 'en', term: 'term1', value: 'en value'},
+				{languageCode: 'de', term: 'term1', value: 'de value'},
+			]
+			const grouper = (translation: utils.Translation) => translation.languageCode
+			const translationsByLanguageCode = utils.groupTranslations(<any>translations, grouper)
+			expect(translationsByLanguageCode.size).toBe(2)
+			expect(translationsByLanguageCode.has('en'))
+			expect(translationsByLanguageCode.has('de'))
+			expect(translationsByLanguageCode.get('en')).toEqual([
+				<any>{languageCode: 'en', term: 'term1', value: 'en value'},
+			])
+		})
+	})
+
+	describe('formatTranslations', function () {
+		it('works', function () {
+			const translations = [
+				{languageCode: 'en', term: 'term1', value: 'value1'},
+				{languageCode: 'en', term: 'term2', value: 'value2'},
+			]
+			const data = utils.formatTranslations(<any>translations)
+			expect(data).toEqual('{\n\t"term1": "value1",\n\t"term2": "value2"\n}')
+		})
+	})
+
 	describe('writeTranslations', function () {
 		beforeEach(function () {
 			this.translations = [
@@ -143,9 +166,7 @@ describe('utils', function () {
 				{languageCode: 'en', term: 'app.title.1', value: 'en title one'},
 				{languageCode: 'de', term: 'app.title.1', value: 'de title one'},
 			]
-			this.writeFile = spyOn(fs, 'writeFileAsync').and.callFake(function (file) {
-				return bluebird.resolve(file)
-			})
+			this.writeFile = spyOn(fs, 'writeFileAsync').and.returnValue(Promise.resolve())
 			this.getFile = function (translation) {
 				return './my-translations/' + translation.languageCode + '.json'
 			}
@@ -171,13 +192,7 @@ describe('utils', function () {
 			.then(function () {
 				expect(this.writeFile.calls.first().args).toEqual([
 					'./my-translations/en.json',
-					stringify({
-						'app.title.1': 'en title one',
-						'app.title.2': 'en title two',
-						'app.title.3': 'en title three',
-					}, {
-						space: '\t',
-					})
+					'{\n\t"app.title.1": "en title one",\n\t"app.title.2": "en title two",\n\t"app.title.3": "en title three"\n}',
 				])
 				done()
 			}.bind(this))
