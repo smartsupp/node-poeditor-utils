@@ -21,6 +21,9 @@
   "scripts": {
     "test": "make build test"
   },
+  "engines": {
+    "node": ">=8"
+  },
   "dependencies": {
     "json-stable-stringify": "^1.0.0",
     "poeditor-client": "0.0.4"
