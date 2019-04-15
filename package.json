@@ -22,12 +22,12 @@
     "test": "make build test"
   },
   "dependencies": {
-    "@types/node": "^11.11.3",
     "json-stable-stringify": "^1.0.0",
     "poeditor-client": "0.0.4"
   },
   "devDependencies": {
     "@types/jasmine": "^3.3.9",
+    "@types/node": "^11.11.3",
     "jasmine": "^3.3.1",
     "ts-node": "^8.0.3",
     "typescript": "^3.3.3333"
