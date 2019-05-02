@@ -7,7 +7,6 @@ describe('poeditor-client', function () {
 
 	it('returns promises', function () {
 		const Client = require('poeditor-client')
-		// TODO
 		expect(new Client('my token').projects.list().then).toEqual(jasmine.any(Function))
 	})
 })
