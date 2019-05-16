@@ -1,11 +1,12 @@
 import * as utils from '..'
+import * as internalUtils from '../lib/utils'
 
 const apiToken = process.env.TEST_API_TOKEN
 const projectName = process.env.TEST_PROJECT_NAME
 
 describe('package', () => {
 	it('exports meaningful stuff', () => {
-		expect(utils.pullTranslations).toBe(utils.pullTranslations)
+		expect(utils.pullTranslations).toBe(internalUtils.pullTranslations)
 	})
 })
 
