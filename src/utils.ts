@@ -6,29 +6,26 @@ import {createClient, Project} from './client'
 import * as fs from './fs'
 
 export async function getProject(apiToken: string, projectName: string): Promise<Project> {
-	const client = createClient(apiToken)
-	return Promise.resolve(client.projects.list())
+	return createClient(apiToken).projects.list()
 	.then((projects) => projects.find((project) => project.name == projectName))
 }
 
 export async function getTranslations(project: Project): Promise<Translation[]> {
-	return Promise.resolve(project.languages.list())
-	.then((languages) => {
-		return Promise.all(
-			languages.map((language) => {
-				return Promise.resolve(language.terms.list())
-				.then((terms) => terms.map((term) => {
-					const translation = new LegacyTranslation()
-					translation.projectName = project.name
-					translation.languageCode = language.code
-					translation.term = term.term
-					translation.value = term.translation
-					return translation
-				}))
-			})
-		)
+	return project.languages.list()
+	.then((languages) =>
+		Promise.all(languages.map((language) =>
+			language.terms.list()
+			.then((terms) => terms.map((term) => {
+				const translation = new LegacyTranslation()
+				translation.projectName = project.name
+				translation.languageCode = language.code
+				translation.term = term.term
+				translation.value = term.translation
+				return translation
+			}))
+		))
 		.then((translations) => [].concat(...translations))
-	})
+	)
 }
 
 export interface Translation {

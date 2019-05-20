@@ -37,12 +37,6 @@ describe('utils', function () {
 			this.createClient = spyOn(client, 'createClient').and.returnValue(this.client)
 		})
 
-		it('returns a promise', function (done) {
-			utils.getProject('my token', 'my project')
-			.then(done)
-			.catch(done.fail)
-		})
-
 		it('delegates to poeditor-client', function (done) {
 			utils.getProject('my token', 'my project')
 			.then(function () {
@@ -95,12 +89,6 @@ describe('utils', function () {
 					list: languagesList,
 				},
 			}
-		})
-
-		it('returns a promise', function (done) {
-			utils.getTranslations(this.project)
-			.then(done)
-			.catch(done.fail)
 		})
 
 		it('delegates to poeditor-client', function (done) {
@@ -172,12 +160,6 @@ describe('utils', function () {
 			}
 		})
 
-		it('returns a promise', function (done) {
-			utils.writeTranslations(this.translations, this.getFile)
-			.then(done)
-			.catch(done.fail)
-		})
-
 		it('writes translations to files by language', function (done) {
 			utils.writeTranslations(this.translations, this.getFile)
 			.then(function (files) {
@@ -221,12 +203,6 @@ describe('utils', function () {
 			this.files = []
 			this.writeTranslations = spyOn(utils, 'writeTranslations').and.returnValue(Promise.resolve(this.files))
 			this.getFile = jasmine.createSpy()
-		})
-
-		it('returns a promise', function (done) {
-			utils.pullTranslations('my token', 'my project', this.getFile)
-			.then(done)
-			.catch(done.fail)
 		})
 
 		it('delegates to helper functions', function (done) {

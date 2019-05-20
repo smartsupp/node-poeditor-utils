@@ -6,21 +6,21 @@ export function createClient(apiToken: string): Client {
 
 export interface Client {
 	projects: {
-		list: () => Project[]
+		list: () => Promise<Project[]>
 	}
 }
 
 export interface Project {
 	name: string
 	languages: {
-		list: () => Language[]
+		list: () => Promise<Language[]>
 	}
 }
 
 export interface Language {
 	code: string
 	terms: {
-		list: () => Term[]
+		list: () => Promise<Term[]>
 	}
 }
 
