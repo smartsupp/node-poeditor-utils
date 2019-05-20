@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+
 import * as utils from '..'
 import * as internalUtils from '../lib/utils'
 
@@ -17,18 +19,50 @@ describe('package usage', () => {
 		jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 	})
 
-	it('works as intended', async () => {
+	const tmpPath = './spec/tmp'
+	fs.mkdirSync(tmpPath)
+
+	it('is as it is', async () => {
 		if (apiToken && projectName) {
+			const translationsPath = `${tmpPath}/use-case`
+			fs.mkdirSync(translationsPath)
+
 			const languages = {
 				'en': 'english',
 			}
-			const paths = await utils.pullTranslations(apiToken, projectName, (translation) => {
+			const getPathCallback = (translation) => {
 				const language = languages[translation.languageCode] || translation.languageCode
-				return `./spec/tmp/${language}.json`
-			})
-			expect(paths).toContain(`./spec/tmp/english.json`)
+				return `${translationsPath}/${language}.json`
+			}
+			const paths = await utils.pullTranslations(apiToken, projectName, getPathCallback)
+			expect(paths).toContain(`${translationsPath}/english.json`)
 		} else {
 			expect().nothing
+		}
+	})
+
+	it('could be better, as in moar flexible', async () => {
+		if (apiToken && projectName) {
+			const translationsPath = `${tmpPath}/better-use-case`
+			fs.mkdirSync(translationsPath)
+
+			// TODO: get translations for multiple projects at once
+			const translations = await Promise.all([projectName].map((projectName) => {
+			// TODO: get translations directly with API key, skip project step
+				return internalUtils.getProject(apiToken, projectName)
+				.then((project) => internalUtils.getTranslations(project))
+			}))
+			.then((translations) => [].concat(...translations))
+			const translationsByLanguage = internalUtils.groupTranslations(translations, (translation) => translation.languageCode)
+			const languages = {
+				'en': 'english',
+			}
+			translationsByLanguage.forEach((translations, languageCode) => {
+				const language = languages[languageCode] || languageCode
+				// TODO: allow whitespace control for JSON formatting
+				const data = internalUtils.formatTranslations(translations)
+				require('fs').writeFileSync(`${translationsPath}/${language}.json`, data)
+			})
 		}
 	})
 
