@@ -120,11 +120,15 @@ describe('utils', function () {
 
 	describe('getTranslations2', function () {
 		beforeEach(function () {
-			this.project = {name: 'test project'}
+			this.project1 = {name: 'test project 1'}
+			this.project2 = {name: 'test project 2'}
+			this.project3 = {name: 'test project 3'}
 			this.createClient = spyOn(client, 'createClient').and.returnValue({
 				projects: {
 					list: jasmine.createSpy('projects.list').and.returnValue(Promise.resolve([
-						this.project,
+						this.project1,
+						this.project2,
+						this.project3,
 					])),
 				},
 			})
@@ -134,13 +138,23 @@ describe('utils', function () {
 		})
 
 		it('works with API token directly', function (done) {
-			utils.getTranslations2('test token', 'test project')
-			.then((translations) => {
+			utils.getTranslations2('test token', ['test project 1', 'test project 2'])
+			.then(() => {
 				expect(this.createClient).toHaveBeenCalledWith('test token')
-				expect(this.getTranslations).toHaveBeenCalledWith(this.project)
-				expect(translations).toEqual(<any>[
-					{value: 'test project translation'},
-				])
+				done()
+			})
+			.catch(done.fail)
+		})
+
+		it('works with multiple projects', function (done) {
+			utils.getTranslations2('test token', ['test project 1', 'test project 2'])
+			.then((translations) => {
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project1)
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project2)
+				expect(this.getTranslations).not.toHaveBeenCalledWith(this.project3)
+				expect(translations.length).toBe(2)
+				expect(translations).toContain(<any>{value: 'test project 1 translation'})
+				expect(translations).not.toContain(<any>{value: 'test project 3 translation'})
 				done()
 			})
 			.catch(done.fail)

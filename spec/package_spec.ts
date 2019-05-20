@@ -46,11 +46,7 @@ describe('package usage', () => {
 			const translationsPath = `${tmpPath}/better-use-case`
 			fs.mkdirSync(translationsPath)
 
-			// TODO: get translations for multiple projects at once
-			const translations = await Promise.all(
-				[projectName].map((projectName) => internalUtils.getTranslations2(apiToken, projectName))
-			)
-			.then((translations) => [].concat(...translations))
+			const translations = await internalUtils.getTranslations2(apiToken, [projectName])
 			const translationsByLanguage = internalUtils.groupTranslations(translations, (translation) => translation.languageCode)
 			const languages = {
 				'en': 'english',
