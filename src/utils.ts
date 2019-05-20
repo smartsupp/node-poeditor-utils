@@ -28,6 +28,12 @@ export async function getTranslations(project: Project): Promise<Translation[]> 
 	)
 }
 
+export async function getTranslations2(apiToken: string, projectName: string): Promise<Translation[]> {
+	return createClient(apiToken).projects.list()
+	.then((projects) => projects.find((project) => project.name == projectName))
+	.then((project) => exports.getTranslations(project))
+}
+
 export interface Translation {
 	projectName: string
 	languageCode: string

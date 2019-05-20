@@ -118,6 +118,35 @@ describe('utils', function () {
 		})
 	})
 
+	describe('getTranslations2', function () {
+		beforeEach(function () {
+			this.project = {name: 'test project'}
+			this.createClient = spyOn(client, 'createClient').and.returnValue({
+				projects: {
+					list: jasmine.createSpy('projects.list').and.returnValue(Promise.resolve([
+						this.project,
+					])),
+				},
+			})
+			this.getTranslations = spyOn(utils, 'getTranslations').and.callFake((project) => Promise.resolve(<any>[
+				{value: project.name + ' translation'},
+			]))
+		})
+
+		it('works with API token directly', function (done) {
+			utils.getTranslations2('test token', 'test project')
+			.then((translations) => {
+				expect(this.createClient).toHaveBeenCalledWith('test token')
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project)
+				expect(translations).toEqual(<any>[
+					{value: 'test project translation'},
+				])
+				done()
+			})
+			.catch(done.fail)
+		})
+	})
+
 	describe('groupTranslations', function () {
 		it('works', function () {
 			const translations = [
