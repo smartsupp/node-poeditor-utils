@@ -13,57 +13,49 @@ describe('package', () => {
 })
 
 describe('package usage', () => {
-	const originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
-
-	beforeEach(() => {
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
-	})
-
 	const tmpPath = './spec/tmp'
 	fs.mkdirSync(tmpPath)
 
+	const timeout = 10000
+
 	it('is as it is', async () => {
 		if (apiToken && projectName) {
-			const translationsPath = `${tmpPath}/use-case`
+			const translationsPath = `${tmpPath}/usage`
 			fs.mkdirSync(translationsPath)
-
-			const languages = {
-				'en': 'english',
+			const languageCodeOverrides = {
+				'pt-br': 'pt',
 			}
 			const getPathCallback = (translation) => {
-				const language = languages[translation.languageCode] || translation.languageCode
+				const language = languageCodeOverrides[translation.languageCode] || translation.languageCode
 				return `${translationsPath}/${language}.json`
 			}
-			const paths = await utils.pullTranslations(apiToken, projectName, getPathCallback)
-			expect(paths).toContain(`${translationsPath}/english.json`)
+			await utils.pullTranslations(apiToken, projectName, getPathCallback)
 		} else {
-			expect().nothing
+			expect().nothing()
 		}
-	})
+	}, timeout)
 
 	it('could be better, as in moar flexible', async () => {
 		if (apiToken && projectName) {
-			const translationsPath = `${tmpPath}/better-use-case`
+			const translationsPath = `${tmpPath}/better-usage`
 			fs.mkdirSync(translationsPath)
-
-			const translations = await internalUtils.getTranslations2(apiToken, [projectName])
-			const translationsByLanguage = internalUtils.groupTranslations(translations, (translation) => translation.languageCode)
-			const languages = {
-				'en': 'english',
+			const languageCodeOverrides = {
+				'pt-br': 'pt',
 			}
+			const projectNames = [projectName]
+			const translations = await internalUtils.getTranslations2(apiToken, projectNames)
+			const translationsByLanguage = internalUtils.groupTranslations(translations, (translation) => translation.languageCode)
 			translationsByLanguage.forEach((translations, languageCode) => {
-				const language = languages[languageCode] || languageCode
+				const language = languageCodeOverrides[languageCode] || languageCode
 				const data = internalUtils.formatTranslationsAsJson(translations, {
 					indent: 2,
 				})
-				require('fs').writeFileSync(`${translationsPath}/${language}.json`, data)
+				fs.writeFileSync(`${translationsPath}/${language}.json`, data)
 			})
+		} else {
+			expect().nothing()
 		}
-	})
-
-	afterEach(() => {
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout
-	})
+	}, timeout)
 })
 
 describe('package backwards compatibility', () => {
