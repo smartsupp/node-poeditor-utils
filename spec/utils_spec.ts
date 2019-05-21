@@ -178,14 +178,22 @@ describe('utils', function () {
 		})
 	})
 
-	describe('formatTranslations', function () {
-		it('works', function () {
-			const translations = [
-				{languageCode: 'en', term: 'term1', value: 'value1'},
-				{languageCode: 'en', term: 'term2', value: 'value2'},
-			]
-			const data = utils.formatTranslations(<any>translations)
+	describe('formatTranslationsAsJson', function () {
+		const translations = [
+			{languageCode: 'en', term: 'term1', value: 'value1'},
+			{languageCode: 'en', term: 'term2', value: 'value2'},
+		]
+
+		it('indents w/ tab by default', function () {
+			const data = utils.formatTranslationsAsJson(<any>translations)
 			expect(data).toEqual('{\n\t"term1": "value1",\n\t"term2": "value2"\n}')
+		})
+
+		it('can control indentation', function () {
+			const data2 = utils.formatTranslationsAsJson(<any>translations, {
+				indent: 2,
+			})
+			expect(data2).toEqual('{\n  "term1": "value1",\n  "term2": "value2"\n}')
 		})
 	})
 

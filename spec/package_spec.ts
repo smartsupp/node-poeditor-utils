@@ -53,8 +53,9 @@ describe('package usage', () => {
 			}
 			translationsByLanguage.forEach((translations, languageCode) => {
 				const language = languages[languageCode] || languageCode
-				// TODO: allow whitespace control for JSON formatting
-				const data = internalUtils.formatTranslations(translations)
+				const data = internalUtils.formatTranslationsAsJson(translations, {
+					indent: 2,
+				})
 				require('fs').writeFileSync(`${translationsPath}/${language}.json`, data)
 			})
 		}
