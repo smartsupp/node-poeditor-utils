@@ -11,8 +11,6 @@ describe('package', () => {
 		expect(utils.getTranslations).toBe(internalUtils.getTranslations2)
 		expect(utils.groupTranslations).toBe(internalUtils.groupTranslations)
 		expect(utils.formatTranslationsAsJson).toBe(internalUtils.formatTranslationsAsJson)
-
-		expect(utils.pullTranslations).toBe(internalUtils.pullTranslations)
 	})
 })
 
@@ -64,6 +62,10 @@ describe('package usage', () => {
 })
 
 describe('package backwards compatibility', () => {
+	it('still exports pullTranslations', () => {
+		expect(utils.pullTranslations).toEqual(jasmine.any(Function))
+	})
+
 	it('still exports poeditor-client shizz', () => {
 		expect(utils.Client).toEqual(jasmine.any(Function))
 		expect(utils.getProject).toEqual(jasmine.any(Function))

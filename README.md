@@ -80,7 +80,7 @@ Exposes the [poeditor-client][2] `Client`. See their docs for more.
 
 Returns a promise which resolves with a [poeditor-client][2] `Project` representation of the project. See their docs for more.
 
-### utils.pullTranslations(apiToken, projectName, getPathCallback)
+### ~~utils.pullTranslations(apiToken, projectName, getPathCallback)~~ [DEPRECATED]
 
 * `apiToken: string` - POEditor API token
 * `projectName: string` - POEditor project name
