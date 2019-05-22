@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+
 import * as utils from '..'
 import * as internalUtils from '../lib/utils'
 
@@ -6,35 +8,59 @@ const projectName = process.env.TEST_PROJECT_NAME
 
 describe('package', () => {
 	it('exports meaningful stuff', () => {
+		expect(utils.getTranslations).toBe(internalUtils.getTranslations2)
+		expect(utils.groupTranslations).toBe(internalUtils.groupTranslations)
+		expect(utils.formatTranslationsAsJson).toBe(internalUtils.formatTranslationsAsJson)
+
 		expect(utils.pullTranslations).toBe(internalUtils.pullTranslations)
 	})
 })
 
 describe('package usage', () => {
-	const originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
+	const tmpPath = './spec/tmp'
+	fs.mkdirSync(tmpPath)
 
-	beforeEach(() => {
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
-	})
+	const timeout = 10000
 
-	it('works as intended', async () => {
+	it('is quite flexible', async () => {
 		if (apiToken && projectName) {
-			const languages = {
-				'en': 'english',
+			const translationsPath = `${tmpPath}/usage`
+			fs.mkdirSync(translationsPath)
+			const languageCodeOverrides = {
+				'pt-br': 'pt',
 			}
-			const paths = await utils.pullTranslations(apiToken, projectName, (translation) => {
-				const language = languages[translation.languageCode] || translation.languageCode
-				return `./spec/tmp/${language}.json`
+			const translations = await utils.getTranslations(apiToken, [
+				projectName,
+			])
+			const translationsByLanguage = utils.groupTranslations(translations, (translation) => translation.languageCode)
+			translationsByLanguage.forEach((translations, languageCode) => {
+				const language = languageCodeOverrides[languageCode] || languageCode
+				const data = utils.formatTranslationsAsJson(translations, {
+					indent: 2,
+				})
+				fs.writeFileSync(`${translationsPath}/${language}.json`, data)
 			})
-			expect(paths).toContain(`./spec/tmp/english.json`)
 		} else {
-			expect().nothing
+			expect().nothing()
 		}
-	})
+	}, timeout)
 
-	afterEach(() => {
-		jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout
-	})
+	it('was quite limited', async () => {
+		if (apiToken && projectName) {
+			const translationsPath = `${tmpPath}/obsolete-usage`
+			fs.mkdirSync(translationsPath)
+			const languageCodeOverrides = {
+				'pt-br': 'pt',
+			}
+			const getPathCallback = (translation) => {
+				const language = languageCodeOverrides[translation.languageCode] || translation.languageCode
+				return `${translationsPath}/${language}.json`
+			}
+			await utils.pullTranslations(apiToken, projectName, getPathCallback)
+		} else {
+			expect().nothing()
+		}
+	}, timeout)
 })
 
 describe('package backwards compatibility', () => {

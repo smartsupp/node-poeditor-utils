@@ -1,6 +1,6 @@
 import * as util from 'util'
 
-import * as stringify from 'json-stable-stringify'
+import * as jsonStableStringify from 'json-stable-stringify'
 
 import {createClient, Project} from './client'
 import * as fs from './fs'
@@ -24,6 +24,15 @@ export async function getTranslations(project: Project): Promise<Translation[]> 
 				return translation
 			}))
 		))
+		.then((translations) => [].concat(...translations))
+	)
+}
+
+export async function getTranslations2(apiToken: string, projectNames: string[]): Promise<Translation[]> {
+	return createClient(apiToken).projects.list()
+	.then((projects) => projects.filter((project) => projectNames.includes(project.name)))
+	.then((projects) =>
+		Promise.all(projects.map((project) => exports.getTranslations(project)))
 		.then((translations) => [].concat(...translations))
 	)
 }
@@ -71,15 +80,22 @@ export function groupTranslations(translations: Translation[], grouper: (transla
 	)
 }
 
-export function formatTranslations(translations: Translation[]): string {
-	return stringify(translations.reduce(
+export type formatTranslationsAsJsonOptions = {
+	indent?: number | string,
+}
+
+export function formatTranslationsAsJson(translations: Translation[], options?: formatTranslationsAsJsonOptions): string {
+	options = Object.assign({
+		indent: '\t',
+	}, options)
+	return jsonStableStringify(translations.reduce(
 		(obj, translation) => {
 			obj[translation.term] = translation.value
 			return obj
 		},
 		{},
 	), {
-		space: '\t',
+		space: options.indent,
 	})
 }
 
@@ -90,7 +106,7 @@ export async function writeTranslations(translations: Translation[], getPathCall
 	const translationsByPath = groupTranslations(translations, getPathCallback)
 	return Promise.all(
 		Array.from(translationsByPath.entries()).map(([path, translations]) => {
-			const data = formatTranslations(translations)
+			const data = formatTranslationsAsJson(translations)
 			return (<any>fs.writeFileAsync)(path, data).then(() => path)
 		})
 	)

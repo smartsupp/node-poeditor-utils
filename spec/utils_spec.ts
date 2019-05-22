@@ -118,6 +118,49 @@ describe('utils', function () {
 		})
 	})
 
+	describe('getTranslations2', function () {
+		beforeEach(function () {
+			this.project1 = {name: 'test project 1'}
+			this.project2 = {name: 'test project 2'}
+			this.project3 = {name: 'test project 3'}
+			this.createClient = spyOn(client, 'createClient').and.returnValue({
+				projects: {
+					list: jasmine.createSpy('projects.list').and.returnValue(Promise.resolve([
+						this.project1,
+						this.project2,
+						this.project3,
+					])),
+				},
+			})
+			this.getTranslations = spyOn(utils, 'getTranslations').and.callFake((project) => Promise.resolve(<any>[
+				{value: project.name + ' translation'},
+			]))
+		})
+
+		it('works with API token directly', function (done) {
+			utils.getTranslations2('test token', ['test project 1', 'test project 2'])
+			.then(() => {
+				expect(this.createClient).toHaveBeenCalledWith('test token')
+				done()
+			})
+			.catch(done.fail)
+		})
+
+		it('works with multiple projects', function (done) {
+			utils.getTranslations2('test token', ['test project 1', 'test project 2'])
+			.then((translations) => {
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project1)
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project2)
+				expect(this.getTranslations).not.toHaveBeenCalledWith(this.project3)
+				expect(translations.length).toBe(2)
+				expect(translations).toContain(<any>{value: 'test project 1 translation'})
+				expect(translations).not.toContain(<any>{value: 'test project 3 translation'})
+				done()
+			})
+			.catch(done.fail)
+		})
+	})
+
 	describe('groupTranslations', function () {
 		it('works', function () {
 			const translations = [
@@ -135,14 +178,22 @@ describe('utils', function () {
 		})
 	})
 
-	describe('formatTranslations', function () {
-		it('works', function () {
-			const translations = [
-				{languageCode: 'en', term: 'term1', value: 'value1'},
-				{languageCode: 'en', term: 'term2', value: 'value2'},
-			]
-			const data = utils.formatTranslations(<any>translations)
+	describe('formatTranslationsAsJson', function () {
+		const translations = [
+			{languageCode: 'en', term: 'term1', value: 'value1'},
+			{languageCode: 'en', term: 'term2', value: 'value2'},
+		]
+
+		it('indents w/ tab by default', function () {
+			const data = utils.formatTranslationsAsJson(<any>translations)
 			expect(data).toEqual('{\n\t"term1": "value1",\n\t"term2": "value2"\n}')
+		})
+
+		it('can control indentation', function () {
+			const data2 = utils.formatTranslationsAsJson(<any>translations, {
+				indent: 2,
+			})
+			expect(data2).toEqual('{\n  "term1": "value1",\n  "term2": "value2"\n}')
 		})
 	})
 
