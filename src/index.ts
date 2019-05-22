@@ -10,3 +10,9 @@ export {
 	getProjectDeprecation as getProject,
 	pullTranslations,
 }
+
+export {
+	getTranslations2 as getTranslations,
+	groupTranslations,
+	formatTranslationsAsJson,
+} from './utils'
