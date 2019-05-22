@@ -68,7 +68,9 @@ describe('package backwards compatibility', () => {
 
 	it('still exports poeditor-client shizz', () => {
 		expect(utils.Client).toEqual(jasmine.any(Function))
+		expect(new utils.Client(null))
 		expect(utils.getProject).toEqual(jasmine.any(Function))
+		expectAsync(utils.getProject(null, null)).toBeRejected()
 	})
 
 	it('still exports lib/utils internals', () => {
