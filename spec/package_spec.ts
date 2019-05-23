@@ -18,7 +18,7 @@ describe('package usage', () => {
 	const tmpPath = './spec/tmp'
 	fs.mkdirSync(tmpPath)
 
-	const timeout = 10000
+	const timeout = 15000
 
 	it('is quite flexible', async () => {
 		if (apiToken && projectName) {
