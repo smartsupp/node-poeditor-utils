@@ -29,7 +29,13 @@ describe('package usage', () => {
 			}
 			const translations = await utils.getTranslations(apiToken, [
 				projectName,
-			])
+			], {
+				languageCodes: [
+					'en',
+					'cz',
+					'pt-br',
+				],
+			})
 			const translationsByLanguage = utils.groupTranslations(translations, (translation) => translation.languageCode)
 			translationsByLanguage.forEach((translations, languageCode) => {
 				const language = languageCodeOverrides[languageCode] || languageCode

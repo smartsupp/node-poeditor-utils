@@ -40,13 +40,15 @@ translationsByLanguage.forEach((translations, languageCode) => {
 
 Translation of a single term to a single language.
 
-## utils.getTranslations(apiToken, projectNames)
+## utils.getTranslations(apiToken, projectNames[, options])
 
 * `apiToken: string`
 * `projectNames: string[]`
+* `options: Object`
+  * `languageCodes: string[]`
 * returns `Promise<Translation[]>`
 
-Gets translations for multiple projects for all the project languages.
+Gets translations for multiple projects. Gets translations for all the project languages or only languages specified with `options.languageCodes`.
 
 ## utils.groupTranslations(translations, grouper)
 
