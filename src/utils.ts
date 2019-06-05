@@ -10,10 +10,20 @@ export async function getProject(apiToken: string, projectName: string): Promise
 	.then((projects) => projects.find((project) => project.name == projectName))
 }
 
-export async function getTranslations(project: Project): Promise<Translation[]> {
+export type getTranslationsOptions = {
+	languageCodes?: string[]
+}
+
+export async function getTranslations(project: Project, options?: getTranslationsOptions): Promise<Translation[]> {
+	options = Object.assign({
+		languageCodes: undefined,
+	} as getTranslationsOptions, options)
 	return project.languages.list()
-	.then((languages) =>
-		Promise.all(languages.map((language) =>
+	.then((languages) => {
+		if (options.languageCodes) {
+			languages = languages.filter((language) => options.languageCodes.includes(language.code))
+		}
+		return Promise.all(languages.map((language) =>
 			language.terms.list()
 			.then((terms) => terms.map((term) => {
 				const translation = new LegacyTranslation()
@@ -25,16 +35,16 @@ export async function getTranslations(project: Project): Promise<Translation[]> 
 			}))
 		))
 		.then((translations) => [].concat(...translations))
-	)
+	})
 }
 
-export async function getTranslations2(apiToken: string, projectNames: string[]): Promise<Translation[]> {
+export async function getTranslations2(apiToken: string, projectNames: string[], options?: getTranslationsOptions): Promise<Translation[]> {
 	return createClient(apiToken).projects.list()
-	.then((projects) => projects.filter((project) => projectNames.includes(project.name)))
-	.then((projects) =>
-		Promise.all(projects.map((project) => exports.getTranslations(project)))
+	.then((projects) => {
+		projects = projects.filter((project) => projectNames.includes(project.name))
+		return Promise.all(projects.map((project) => exports.getTranslations(project, options)))
 		.then((translations) => [].concat(...translations))
-	)
+	})
 }
 
 export interface Translation {
@@ -81,13 +91,13 @@ export function groupTranslations(translations: Translation[], grouper: (transla
 }
 
 export type formatTranslationsAsJsonOptions = {
-	indent?: number | string,
+	indent?: number | string
 }
 
 export function formatTranslationsAsJson(translations: Translation[], options?: formatTranslationsAsJsonOptions): string {
 	options = Object.assign({
 		indent: '\t',
-	}, options)
+	} as formatTranslationsAsJsonOptions, options)
 	return jsonStableStringify(translations.reduce(
 		(obj, translation) => {
 			obj[translation.term] = translation.value

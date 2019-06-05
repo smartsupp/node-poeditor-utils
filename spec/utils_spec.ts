@@ -112,6 +112,28 @@ describe('utils', function () {
 					term: 'app.title.1',
 					value: 'en 1',
 				}))
+				expect(translations).toContain(jasmine.objectContaining({
+					languageCode: 'de',
+				}))
+				done()
+			})
+			.catch(done.fail)
+		})
+
+		it('can filter by language', function (done) {
+			utils.getTranslations(this.project, {
+				languageCodes: [
+					'en',
+				],
+			})
+			.then(function (translations) {
+				expect(translations.length).toBe(2)
+				expect(translations).toContain(jasmine.objectContaining({
+					languageCode: 'en',
+				}))
+				expect(translations).not.toContain(jasmine.objectContaining({
+					languageCode: 'de',
+				}))
 				done()
 			})
 			.catch(done.fail)
@@ -149,12 +171,22 @@ describe('utils', function () {
 		it('works with multiple projects', function (done) {
 			utils.getTranslations2('test token', ['test project 1', 'test project 2'])
 			.then((translations) => {
-				expect(this.getTranslations).toHaveBeenCalledWith(this.project1)
-				expect(this.getTranslations).toHaveBeenCalledWith(this.project2)
-				expect(this.getTranslations).not.toHaveBeenCalledWith(this.project3)
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project1, undefined)
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project2, undefined)
+				expect(this.getTranslations).not.toHaveBeenCalledWith(this.project3, undefined)
 				expect(translations.length).toBe(2)
 				expect(translations).toContain(<any>{value: 'test project 1 translation'})
 				expect(translations).not.toContain(<any>{value: 'test project 3 translation'})
+				done()
+			})
+			.catch(done.fail)
+		})
+
+		it('passes options to getTranslations', function (done) {
+			const options = {}
+			utils.getTranslations2('test token', ['test project 1'], options)
+			.then((translations) => {
+				expect(this.getTranslations).toHaveBeenCalledWith(this.project1, options)
 				done()
 			})
 			.catch(done.fail)
